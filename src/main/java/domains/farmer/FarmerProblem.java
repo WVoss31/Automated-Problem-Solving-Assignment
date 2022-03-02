@@ -11,5 +11,13 @@ import framework.problem.Problem;
  * @author walker
  */
 public class FarmerProblem extends Problem{
-    
+    public FarmerProblem() {
+        super();
+        super.setName("Farmer Problem");
+        super.setIntroduction("Get across the river");
+        super.setMover(new FarmerMover());
+        super.setInitialState(new FarmerState("West", "West", "West", "West"));
+        super.setCurrentState(super.getInitialState());
+        super.setFinalState(new FarmerState("East", "East", "East", "East"));
+    }
 }

@@ -105,7 +105,7 @@ public class FarmerMover extends Mover{
     
     private FarmerState takesCabbage(State s) {
       FarmerState thisFarmerState = (FarmerState) s;
-      if (thisFarmerState.getGoat().equals(thisFarmerState.getWolf())) {
+      if (thisFarmerState.getGoat().equals(thisFarmerState.getCabbage()) && thisFarmerState.getFarmer().equals(thisFarmerState.getWolf())) {
             return null;
             }
       else if ((thisFarmerState.getFarmer().equals("West") && thisFarmerState.getCabbage().equals("East"))) {

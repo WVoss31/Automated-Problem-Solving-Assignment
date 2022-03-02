@@ -5,6 +5,7 @@
 package domains.farmer;
 
 import framework.problem.State;
+import java.util.Objects;
 
 /**
  *
@@ -22,7 +23,22 @@ public class FarmerState extends State {
     @Override
     public boolean equals(Object other) {
         FarmerState thisState = (FarmerState) other;
-        return thisState == other;
+        if (other == null) {return false;}
+        else if (!thisState.farmer.equals(this.farmer) || !thisState.wolf.equals(thisState.wolf)
+                || !thisState.goat.equals(this.goat) || !thisState.cabbage.equals(this.cabbage)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.farmer);
+        hash = 83 * hash + Objects.hashCode(this.wolf);
+        hash = 83 * hash + Objects.hashCode(this.goat);
+        hash = 83 * hash + Objects.hashCode(this.cabbage);
+        return hash;
     }
     
     @Override
@@ -34,11 +50,27 @@ public class FarmerState extends State {
         String cabString = " C |  |   \n";
         String emptyString = "   |  |   ";
         
-        if (farmer == "East") { farmerString = "   |  | F \n"; }
-        if (wolf == "East") { wolfString = "   |  | W \n"; }
-        if (goat == "East") { goaString = "   |  | G \n"; }
-        if (cabbage == "East") { cabString = "   |  | C \n"; }
+        if (farmer.equals("East")) { farmerString = "   |  | F \n"; }
+        if (wolf.equals("East")) { wolfString = "   |  | W \n"; }
+        if (goat.equals("East")) { goaString = "   |  | G \n"; }
+        if (cabbage.equals("East")) { cabString = "   |  | C \n"; }
         return riverString + farmerString + wolfString + goaString + cabString + emptyString;
+    }
+    
+    public final String getFarmer() {
+        return farmer;
+    }
+    
+    public final String getWolf() {
+        return wolf;
+    }
+    
+    public final String getGoat() {
+        return goat;
+    }
+    
+    public final String getCabbage() {
+        return cabbage;
     }
     
     private final String farmer;

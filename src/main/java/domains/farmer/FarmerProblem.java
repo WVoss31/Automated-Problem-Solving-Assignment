@@ -4,10 +4,12 @@
  */
 package domains.farmer;
 
+import framework.problem.Problem;
+
 /**
  *
  * @author walker
  */
-public class FarmerProblem {
+public class FarmerProblem extends Problem{
     
 }

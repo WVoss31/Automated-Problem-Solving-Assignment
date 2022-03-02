@@ -21,25 +21,15 @@ public class FarmerState extends State {
     }
     
     @Override
-    public boolean equals(Object other) {
-        FarmerState thisState = (FarmerState) other;
-        if (other == null) {return false;}
-        else if (!thisState.farmer.equals(this.farmer) || !thisState.wolf.equals(thisState.wolf)
-                || !thisState.goat.equals(this.goat) || !thisState.cabbage.equals(this.cabbage)) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object object){
+        if(object == null) return false;
+        FarmerState other = (FarmerState) object;
+        return (this.farmer.equals(other.farmer) &&
+                this.wolf.equals(other.wolf) &&
+                this.goat.equals(other.goat) &&
+                this.cabbage.equals(other.cabbage));
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 83 * hash + Objects.hashCode(this.farmer);
-        hash = 83 * hash + Objects.hashCode(this.wolf);
-        hash = 83 * hash + Objects.hashCode(this.goat);
-        hash = 83 * hash + Objects.hashCode(this.cabbage);
-        return hash;
-    }
     
     @Override
     public String toString() {

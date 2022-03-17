@@ -30,6 +30,16 @@ public class FarmerState extends State {
                 this.cabbage.equals(other.cabbage));
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.farmer);
+        hash = 67 * hash + Objects.hashCode(this.wolf);
+        hash = 67 * hash + Objects.hashCode(this.goat);
+        hash = 67 * hash + Objects.hashCode(this.cabbage);
+        return hash;
+    }
+
     
     @Override
     public String toString() {

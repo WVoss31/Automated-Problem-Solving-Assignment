@@ -5,8 +5,6 @@
 package framework.ui;
 
 import domains.farmer.FarmerProblem;
-import domains.farmer.FarmerState;
-import domains.farmer.FarmerMover;
 import framework.problem.Problem;
 import framework.problem.State;
 import framework.solution.SolvingAssistant;
@@ -20,15 +18,14 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 
 
 
@@ -38,6 +35,8 @@ import javafx.scene.control.Button;
  */
 public class ProblemGUI extends VBox {
     public ProblemGUI(Problem problem, double width, double height) {
+        problemthing = problem;
+        solver = new SolvingAssistant(problemthing);
         //sets VBox size to the width and height
         super.setPrefSize(width, height);
         super.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -53,16 +52,23 @@ public class ProblemGUI extends VBox {
         IntroLabel.setWrapText(true);
         IntroLabel.setFont(Font.font("JetBrainsMono Nerd Font Mono", 12));
         //making new HBox
-        HBox displayHBox = new HBox(50);
+        HBox displayHBox = new HBox(30);
         displayHBox.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         displayHBox.setAlignment(Pos.CENTER);
         
-        displayState(new FarmerState("West", "West", "West", "West"), displayHBox, "Current State:");
-        displayButtons(displayHBox, "Moves (0 so far):");
-        displayState(new FarmerState("East", "East", "East", "East"), displayHBox, "Goal State:");
- 
+        displayButtons(displayHBox, "Moves (" + solver.getMoveCount() + " so far):");
+        displayState(solver.getProblem().getFinalState(), displayHBox, "Goal State:");
+        displayState(solver.getProblem().getInitialState(), displayHBox, "Current State:");
+        createProblemStatus();
+        
+        Button resetButton = new Button("Reset");
+        resetButton.setOnAction(e -> {solver.reset(); 
+                                nodeLabel.setText(problemthing.getCurrentState().toString());
+                                updateProblemStatus();});
+        
+
         //adding to display
-        super.getChildren().addAll(Welcome, IntroLabel, displayHBox);
+        super.getChildren().addAll(Welcome, IntroLabel, displayHBox, status, resetButton);
     }
     
     public ProblemGUI(Problem problem) {
@@ -76,14 +82,14 @@ public class ProblemGUI extends VBox {
      * @param box
      * @param labelString 
      */
-    private void displayState(FarmerState state, HBox box, String labelString) {
+    private void displayState(State state, HBox box, String labelString) {
         VBox verticalBox = new VBox();
         HBox hb = new HBox();
         //creating title label
         Label titLabel = new Label(labelString);
         titLabel.setFont(Font.font("JetBrainsMono Nerd Font Mono",FontWeight.BOLD, 20));
         //creating state diagram
-        Label nodeLabel = new Label(state.toString());
+        nodeLabel = new Label(state.toString());
         nodeLabel.setBorder(new Border(new BorderStroke(Paint.valueOf("Black"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         nodeLabel.setFont(Font.font("JetBrainsMono Nerd Font Mono",FontWeight.BOLD, 20));
         //setting padding stuff
@@ -113,20 +119,61 @@ public class ProblemGUI extends VBox {
         HBox hb = new HBox();
         hb.setAlignment(Pos.CENTER);
         //setting up label
-        Label title = new Label(labelString);
-        title.setFont(Font.font("JetBrainsMono Nerd Font Mono",FontWeight.BOLD, 20));
+        movesLabel = new Label(labelString);
+        movesLabel.setFont(Font.font("JetBrainsMono Nerd Font Mono",FontWeight.BOLD, 20));
         //adding title to center
-        hb.getChildren().add(title);
+        hb.getChildren().add(movesLabel);
         //adding center title to vbox
         verticalBox.getChildren().addAll(hb);
         //adding buttons to vbox
-        for (String moves : new FarmerMover().getMoveNames()) {
-            Button move = new Button(moves);
+        for (String moveString : problemthing.getMover().getMoveNames()) {
+            Button move = new Button(moveString);
             move.setPrefSize(250, 15);
-            verticalBox.getChildren().add(move);
+            //trying to make the buttons do stuff
+            move.setOnAction(e -> {movesLabel.setText("Moves (" + solver.getMoveCount() + " so far):");
+                                    solver.tryMove(moveString);
+                                    nodeLabel.setText(problemthing.getCurrentState().toString());
+        updateProblemStatus();});
+            
+            verticalBox.getChildren().addAll(move);
         }   
         //adding buttons to display
-        box.getChildren().add(verticalBox);
+        box.getChildren().addAll(verticalBox);
     }
+    
 
+    
+     private Text createProblemStatus()
+    {
+        status = new Text("");
+        status.setFont(Font.font("JetBrainsMono Nerd Font Mono"));
+        return status;
+    }
+    
+    private void updateProblemStatus() {
+        if (!this.solver.isMoveLegal()) {
+            status.setText("Illegal move. Try again!");
+            status.setFill(Paint.valueOf("#ff0a12"));
+        }
+        else if (this.solver.isProblemSolved()) {
+            status.setText("You win! Congratulations!");
+            status.setFill(Paint.valueOf("#4bbb5b"));
+        }
+        else { 
+            status.setText("");
+            status.setFill(Paint.valueOf("#000000"));
+        }
+    }
+    
+    public Problem getProblem() {
+        return problemthing;
+    }
+    
+
+    private Problem problemthing;
+    private SolvingAssistant solver;
+    private Label movesLabel;
+    private Label nodeLabel;
+    private Text status;
+    
 }

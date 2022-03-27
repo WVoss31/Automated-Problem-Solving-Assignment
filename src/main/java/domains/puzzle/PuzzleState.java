@@ -153,6 +153,13 @@ public class PuzzleState extends State {
         if (this == other) return true;
         return Arrays.deepEquals(this.tiles, other.tiles);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Arrays.deepHashCode(this.tiles);
+        return hash;
+    }
     
     /**
      * Creates a string representation of this state, with the tiles laid out

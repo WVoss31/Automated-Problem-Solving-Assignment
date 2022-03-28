@@ -1,5 +1,7 @@
 package framework.problem;
 
+import java.util.LinkedList;
+
 /**
  * This class represents problems in a problem solving domain.
  * Getters and setters are provided for the problem name and
@@ -10,6 +12,18 @@ package framework.problem;
  * @author tcolburn
  */
 public class Problem {
+    
+    public Problem() {
+        benchmarks = new LinkedList<>();
+    }
+    
+    public void addBenchmark(Benchmark benchmark) {
+        benchmarks.add(benchmark);
+    }
+    
+    public LinkedList<Benchmark> getBenchmarks() {
+        return benchmarks;
+    }
 
     public String getName() {
         return name;
@@ -75,4 +89,6 @@ public class Problem {
     private State currentState;
     private State finalState;
     private Mover mover;
+    
+    private final LinkedList<Benchmark> benchmarks;
 }

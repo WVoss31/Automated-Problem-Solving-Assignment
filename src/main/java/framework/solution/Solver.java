@@ -169,10 +169,13 @@ public abstract class Solver {
 	s.setDistance(0);
         s.setPredecessor(null);
         add(s);
+        statistics.incrStat(NUM_OPS);
         vertices.put(s, s);
         while (!queue.isEmpty()) {
             Vertex u = queue.remove();
+            statistics.incrStat(NUM_OPS);
             if (success(u)) {
+                statistics.putStat(QUEUE_SIZE, queue.size());
                 queue.clear();
                 return u;
               }
@@ -182,6 +185,8 @@ public abstract class Solver {
                     v.setDistance(u.getDistance() + 1);
                     v.setPredecessor(u);
                     add(v);
+                    statistics.incrStat(NUM_OPS);
+                    statistics.incrStat(CIRCULARITIES);
                 }
             }
         }

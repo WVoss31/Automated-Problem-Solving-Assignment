@@ -1,6 +1,7 @@
 package domains.puzzle;
 
 import framework.problem.State;
+import static java.lang.Math.abs;
 import java.util.Arrays;
 
 /**
@@ -219,5 +220,64 @@ public class PuzzleState extends State {
             }
         }
         return dest;
+    }
+    
+        @Override
+    public int getHeuristic(State goal) {
+//        return tilesOutOfPlace(this, goal);
+        return sumManhattan(this, goal);
+    }
+    
+    /**
+     * This method computes the number of tiles out of place in a
+     * current state relative to the goal state.
+     * @param current the current state of the problem
+     * @param goal the goal state of the problem
+     * @return the number of tiles out of place in the current
+     * state relative to the goal state
+     */
+    public static int tilesOutOfPlace(State current, State goal) {
+        int count = 0;
+	PuzzleState currentPuzzleState = (PuzzleState) current;
+        PuzzleState goalPuzzleState = (PuzzleState) goal;
+        int[][] currentTiles = currentPuzzleState.getTiles();
+        int[][] goalTiles = goalPuzzleState.getTiles();
+        for (int row=0; row<3; ++row) {
+            for (int col=0; col<3; ++col) {
+                if (currentTiles[row][col] != goalTiles[row][col] && currentTiles[row][col] != 0) {
+                    ++count;
+                }
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * This method computes the sum of the distances each tile is out of place
+     * in a current state relative to the goal state.
+     * @param current the current state of the problem
+     * @param goal the goal state of the problem
+     * @return the sum of the distances each tile is out of place
+     * in the current state relative to the goal state
+     */
+    public static int sumManhattan(State current, State goal) {
+        int sum = 0;
+        PuzzleState currentState = (PuzzleState)current;
+        PuzzleState goalState = (PuzzleState)goal;
+        int[][] currentTiles = currentState.getTiles();
+        int[][] goalTiles = goalState.getTiles();
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                for(int x = 0; x < 3; x++) {
+                    for(int y = 0; y < 3; y++) {
+                        if(currentTiles[x][y] == goalTiles[i][j] && currentTiles[x][y] != 0) {
+                            int distance = abs(x - i) + abs(y - j); 
+                            sum += distance;
+                        }
+                    }
+                }
+            } 
+        }
+      return sum;
     }
 }

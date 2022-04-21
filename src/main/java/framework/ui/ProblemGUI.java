@@ -37,6 +37,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
@@ -97,7 +98,8 @@ public class ProblemGUI extends VBox {
         
         //creating statistics panel
         Label StatsLabel = new Label("Statistics:");
-        statistics = new StackPane();
+        statistics = new TextArea();
+        statistics.setMaxSize(250, 250);
         statistics.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         
         //creating Vbox for Statistics and statistics Label
@@ -130,7 +132,7 @@ public class ProblemGUI extends VBox {
             }
             solver2.solve();
             solution = solver2.getSolution();
-//            statistics.setText(solver2.getStatistics().toString());
+            statistics.setText(solver2.getStatistics().toString());
         });
         
         NextButton.setOnAction(e -> {
@@ -295,7 +297,7 @@ public class ProblemGUI extends VBox {
     private Label nodeLabel;
     private Text status;
     private Solution solution;
-    private StackPane statistics;
+    private TextArea statistics;
     private Solver solver2;
     
 }
